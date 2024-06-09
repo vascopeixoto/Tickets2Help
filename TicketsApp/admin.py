@@ -2,21 +2,21 @@ from django.contrib import admin
 from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
 
 
-@admin.register(SoftwareTicket)
 class SoftwareTicketAdmin(admin.ModelAdmin):
-    list_display = ('title', 'estado_ticket', 'estado_atendimento', 'created_at')
+    list_display = ('title', 'estado_ticket', 'estado_atendimento', 'created_at', 'software') # Incluindo 'software'
 
-
-@admin.register(HardwareTicket)
 class HardwareTicketAdmin(admin.ModelAdmin):
-    list_display = ('title', 'estado_ticket', 'estado_atendimento', 'created_at')
+    list_display = ('title', 'estado_ticket', 'estado_atendimento', 'created_at') # Se você também deseja incluir 'equipamento', adicione aqui.
 
-
-@admin.register(EstadoTicket)
 class EstadoTicketAdmin(admin.ModelAdmin):
     list_display = ('nome',)
 
-
-@admin.register(EstadoAtendimento)
 class EstadoAtendimentoAdmin(admin.ModelAdmin):
     list_display = ('nome',)
+
+
+admin.site.register(SoftwareTicket, SoftwareTicketAdmin)
+admin.site.register(HardwareTicket, HardwareTicketAdmin)
+
+admin.site.register(EstadoTicket, EstadoTicketAdmin)
+admin.site.register(EstadoAtendimento, EstadoAtendimentoAdmin)

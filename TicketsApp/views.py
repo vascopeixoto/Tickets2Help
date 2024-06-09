@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import SoftwareTicket, HardwareTicket
+from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
 from django.contrib.auth.decorators import login_required
 
 
@@ -49,3 +49,37 @@ def lista_tickets(request):
         'tickets': tickets
     }
     return render(request, 'tickets.html', context)
+
+
+@login_required
+def adicionar_ticket(request):
+    if request.method == 'POST':
+        tipo_ticket = request.POST.get('tipoTicket')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        estado_ticket = EstadoTicket.objects.first()
+
+        if tipo_ticket == 'software':
+            software = request.POST.get('software')
+            necessidade_desc = request.POST.get('necessidadeDesc')
+            SoftwareTicket.objects.create(
+                title=title,
+                description=description,
+                estado_ticket=estado_ticket,
+                user=request.user,
+                software=software,
+                necessidadeDesc=necessidade_desc
+            )
+        elif tipo_ticket == 'hardware':
+            equipamento = request.POST.get('equipamento')
+            avaria = request.POST.get('avaria')
+            HardwareTicket.objects.create(
+                title=title,
+                description=description,
+                estado_ticket=estado_ticket,
+                user=request.user,
+                equipamento=equipamento,
+                avaria=avaria
+            )
+        return redirect('lista_tickets')
+    return render(request, 'tickets/adicionar_ticket.html')

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets
+from TicketsApp.views import lista_tickets, adicionar_ticket
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +26,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/login'), name='logout'),
     path('tickets/', lista_tickets, name='lista_tickets'),
     path('', lista_tickets, name='lista_tickets'),
-    
+    path('adicionar_ticket/', adicionar_ticket, name='adicionar_ticket'),
 ]
