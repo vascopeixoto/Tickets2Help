@@ -89,17 +89,6 @@ def adicionar_ticket(request):
     return render(request, 'tickets/adicionar_ticket.html')
 
 
-def ticket_details(request, tipo, ticket_id):
-    ticket = None
-    if tipo == 'software':
-        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
-    elif tipo == 'hardware':
-        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
-
-    estados_ticket = EstadoTicket.objects.all()
-    estados_atendimento = EstadoAtendimento.objects.all()
-    return render(request, 'tickets.html', {'tipo': tipo, 'ticket': ticket, 'estados_ticket': estados_ticket, 'estados_atendimento': estados_atendimento})
-
 def ticket_edit_details(request, tipo, ticket_id):
     ticket = None
     if tipo == 'software':
