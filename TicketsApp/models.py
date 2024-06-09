@@ -6,10 +6,14 @@ from django.contrib import admin
 class EstadoTicket(models.Model):
     nome = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.nome
 
 class EstadoAtendimento(models.Model):
     nome = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.nome
 
 class Ticket(models.Model):
     title = models.CharField(max_length=100)
@@ -18,6 +22,7 @@ class Ticket(models.Model):
     estado_ticket = models.ForeignKey(EstadoTicket, on_delete=models.CASCADE)
     estado_atendimento = models.ForeignKey(EstadoAtendimento, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    resolved_at = models.DateTimeField(null=True)
 
     class Meta:
         abstract = True

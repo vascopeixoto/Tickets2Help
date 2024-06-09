@@ -4,6 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.utils.timezone import now
+from math import floor
+from collections import defaultdict
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -123,3 +127,57 @@ def editar_ticket(request, tipo, ticket_id):
         return redirect('lista_tickets')
     else:
         return redirect('lista_tickets')
+
+def hardware_estado_ticket_doughnut_chart(request):
+    estados = EstadoTicket.objects.all()
+    
+    # Prepare data for the chart
+    labels = []
+    data = []
+
+    for estado in estados:
+        labels.append(estado.nome)
+        count = HardwareTicket.objects.filter(estado_ticket=estado).count()
+        data.append(count)
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    
+    return JsonResponse(chart_data)
+
+def hardware_estado_atendimento_doughnut_chart(request):
+    estados = EstadoAtendimento.objects.all()
+    
+    # Prepare data for the chart
+    labels = []
+    data = []
+
+    for estado in estados:
+        labels.append(estado.nome)
+        count = HardwareTicket.objects.filter(estado_atendimento=estado).count()
+        data.append(count)
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    
+    return JsonResponse(chart_data)
+
+def hardware_count_ticket_resolved_bar_chart(request):
+    resolved_tickets = HardwareTicket.objects.filter(resolved_at__isnull=False)
+    day_counts = defaultdict(int)
+    for ticket in resolved_tickets:
+        time_difference = ticket.resolved_at - ticket.created_at
+        days_difference = floor(time_difference.total_seconds() / 86400)  # 86400 seconds in a day
+        day_counts[days_difference] += 1
+
+    labels = sorted(day_counts.keys())
+    data = [day_counts[day] for day in labels]
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    return JsonResponse(chart_data)
