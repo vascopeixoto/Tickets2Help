@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets, adicionar_ticket
+from TicketsApp.views import lista_tickets, adicionar_ticket, ticket_details, editar_ticket, ticket_edit_details
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,8 @@ urlpatterns = [
     path('tickets/', lista_tickets, name='lista_tickets'),
     path('', lista_tickets, name='lista_tickets'),
     path('adicionar_ticket/', adicionar_ticket, name='adicionar_ticket'),
+    path('editdetailsticket/<str:tipo>/<int:ticket_id>/', ticket_edit_details, name='ticket_edit_details'),
+    path('detailsticket/<str:tipo>/<int:ticket_id>/', ticket_details, name='ticket_details'),
+    path('editar_ticket/<int:ticket_id>/', editar_ticket, name='editar_ticket'),
+
 ]

@@ -53,7 +53,13 @@
                     <button type="submit" class="btn" style="font-family: sans-serif;">Logout</button>
                 </form>
             {% endif %}
-            </div>
+            {% if user.is_staff %}
+                <form id="logout-form" action="{% url 'admin:index' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="font-family: sans-serif;">Área Admin</button>
+                </form>
+            {% endif %}
+        </div>
     </div>
     <h2>Tickets</h2>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTicketModal">
@@ -69,6 +75,7 @@
                 <th>Estado do Atendimento</th>
                 <th>Tipo</th>
                 <th>Data de Criação</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -81,6 +88,12 @@
                     <td>{{ ticket.estado_atendimento.nome }}</td>
                     <td>{{ ticket.tipo }}</td>
                     <td>{{ ticket.created_at }}</td>
+                    <td>
+                        {% if user.is_staff %}
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editarModal{{ ticket.id }}" onclick="editar_modal({{ ticket.id }}, '{{ ticket.tipo }}')">Editar</button>
+                        {% endif %}
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#detalhesModal{{ ticket.id }}" onclick="detalhes_modal({{ ticket.id }}, '{{ ticket.tipo }}')">Detalhes</button>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
@@ -91,7 +104,7 @@
     </table>
 
 <!-- Modal -->
-        <div class="modal fade" id="addTicketModal" tabindex="-1" aria-labelledby="addTicketModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addTicketModal" tabindex="-1" aria-labelledby="addTicketModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -106,6 +119,7 @@
                             <div class="form-group">
                                 <label for="tipoTicket">Tipo de Ticket</label>
                                 <select class="form-control" id="tipoTicket" name="tipoTicket" required>
+                                    <option value="">Selecione um</option>
                                     <option value="software">Software</option>
                                     <option value="hardware">Hardware</option>
                                 </select>
@@ -118,7 +132,7 @@
                                 <label for="description">Descrição</label>
                                 <textarea class="form-control" id="description" name="description" required></textarea>
                             </div>
-                            <div class="form-group" id="softwareFields" style="display:block;">
+                            <div class="form-group" id="softwareFields" style="display: none;">
                                 <label for="software">Software</label>
                                 <input type="text" class="form-control" id="software" name="software">
                                 <label for="necessidadeDesc">Descrição da Necessidade</label>
@@ -136,6 +150,160 @@
                 </div>
             </div>
         </div>
+    
+    {% for ticket in tickets %}
+        <div class="modal fade" id="detalhesModal{{ ticket.id }}" tabindex="-1" role="dialog" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Ticket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% if tipo == 'software' %}
+                        <p><strong>Título:</strong> {{ ticket.title }}</p>
+                        <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                        <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                        <p><strong>Estado do Ticket:</strong> {{ ticket.estado_ticket }}</p>
+                        <p><strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento }}</p>
+                        <p><strong>Software:</strong> {{ ticket.software }}</p>
+                        <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
+                        <p><strong>Intervenção Desc:</strong> {{ ticket.intervencaoDesc }}</p>
+                        <p><strong>User:</strong> {{ ticket.user }}</p>
+                    {% elif tipo == 'hardware' %}
+                        <p><strong>Título:</strong> {{ ticket.title }}</p>
+                        <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                        <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                        <p><strong>Estado do Ticket:</strong> {{ ticket.estado_ticket }}</p>
+                        <p><strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento }}</p>
+                        <p><strong>Equipamento:</strong> {{ ticket.equipamento }}</p>
+                        <p><strong>Avaria:</strong> {{ ticket.avaria }}</p>
+                        <p><strong>Reparação Desc:</strong> {{ ticket.reparacaoDesc }}</p>
+                        <p><strong>Peças:</strong> {{ ticket.pecas }}</p>
+                        <p><strong>User:</strong> {{ ticket.user }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {% if user.is_staff %}
+        <!-- Modal de Edição -->
+        {% for ticket in tickets %}
+            <div class="modal fade" id="editarModal{{ ticket.id }}" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarModalLabel">Editar Ticket</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'editar_ticket' ticket.id|default:0 %}">
+                            {% csrf_token %}
+                            {% if tipo == 'software' %}
+                                <p><strong>Título:</strong> {{ ticket.title }}</p>
+                                <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                                <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                                <div class="form-group">
+                                    <label for="estado_ticket">Estado do Ticket:</label>
+                                    <select class="form-control" id="estado_ticket" name="estado_ticket">
+                                        {% for estado in estados_ticket %}
+                                            <option value="{{ estado.id }}" {% if estado.id == ticket.estado_ticket.id %} selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="estado_atendimento">Estado do Atendimento:</label>
+                                    <select class="form-control" id="estado_atendimento" name="estado_atendimento">
+                                        {% for estado in estados_atendimento %}
+                                            <option value="{{ estado.id }}" {% if estado.id == ticket.estado_atendimento.id %} selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <p><strong>Software:</strong> {{ ticket.software }}</p>
+                                <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
+                                <div class="form-group">
+                                    <label for="intervencaoDesc">Intervenção Desc:</label>
+                                    <input type="text" class="form-control" id="intervencaoDesc" name="intervencaoDesc" value="{{ ticket.intervencaoDesc }}">
+                                </div>
+                                <p><strong>User:</strong> {{ ticket.user }}</p>
+                            {% elif tipo == 'hardware' %}
+                                <p><strong>Título:</strong> {{ ticket.title }}</p>
+                                <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                                <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                                <div class="form-group">
+                                    <label for="estado_ticket">Estado do Ticket:</label>
+                                    <select class="form-control" id="estado_ticket" name="estado_ticket">
+                                        {% for estado in estados_ticket %}
+                                            <option value="{{ estado.id }}" {% if estado.id == ticket.estado_ticket.id %} selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="estado_atendimento">Estado do Atendimento:</label>
+                                    <select class="form-control" id="estado_atendimento" name="estado_atendimento">
+                                        {% for estado in estados_atendimento %}
+                                            <option value="{{ estado.id }}" {% if estado.id == ticket.estado_atendimento.id %} selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <p><strong>Equipamento:</strong> {{ ticket.equipamento }}</p>
+                                <p><strong>Avaria:</strong> {{ ticket.avaria }}</p>
+                                <div class="form-group">
+                                    <label for="reparacaoDesc">Reparação Desc:</label>
+                                    <input type="text" class="form-control" id="reparacaoDesc" name="reparacaoDesc" value="{{ ticket.reparacaoDesc }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pecas">Peças:</label>
+                                    <input type="text" class="form-control" id="pecas" name="pecas" value="{{ ticket.pecas }}">
+                                </div>
+                                <p><strong>User:</strong> {{ ticket.user }}</p>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function detalhes_modal(ticketId, tipo) {
+            console.log('Detalhes modal clicado');
+            var modal = $('#detalhesModal' + ticketId);
+            $.ajax({
+                url: '/detailsticket/' + tipo + '/' + ticketId + '/',
+                success: function(data) {
+                    console.log('Success:', data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        
+        function editar_modal(ticketId, tipo) {
+            console.log('Detalhes modal clicado');
+            var modal = $('#editarModal' + ticketId);
+            $.ajax({
+                url: '/editdetailsticket/' + tipo + '/' + ticketId + '/',
+                success: function(data) {
+                    console.log('Success:', data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    </script>
+    
     <script>
         document.getElementById('tipoTicket').addEventListener('change', function() {
             var tipo = this.value;

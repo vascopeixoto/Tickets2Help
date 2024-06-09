@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import render, get_object_or_404
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -33,12 +33,16 @@ def custom_logout(request):
 @login_required
 def lista_tickets(request):
     user = request.user
-    software_tickets = list(SoftwareTicket.objects.filter(user=user))
-    hardware_tickets = list(HardwareTicket.objects.filter(user=user))
+    if user.is_staff:
+        software_tickets = list(SoftwareTicket.objects.all())
+        hardware_tickets = list(HardwareTicket.objects.all())
+    else:
+        software_tickets = list(SoftwareTicket.objects.filter(user=user))
+        hardware_tickets = list(HardwareTicket.objects.filter(user=user))
 
     for ticket in software_tickets:
         ticket.tipo = 'Software'
-
+    for ticket in hardware_tickets:
         ticket.tipo = 'Hardware'
 
     tickets = software_tickets + hardware_tickets
@@ -83,3 +87,50 @@ def adicionar_ticket(request):
             )
         return redirect('lista_tickets')
     return render(request, 'tickets/adicionar_ticket.html')
+
+
+def ticket_details(request, tipo, ticket_id):
+    ticket = None
+    if tipo == 'software':
+        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
+    elif tipo == 'hardware':
+        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
+
+    estados_ticket = EstadoTicket.objects.all()
+    estados_atendimento = EstadoAtendimento.objects.all()
+    return render(request, 'tickets.html', {'tipo': tipo, 'ticket': ticket, 'estados_ticket': estados_ticket, 'estados_atendimento': estados_atendimento})
+
+def ticket_edit_details(request, tipo, ticket_id):
+    ticket = None
+    if tipo == 'software':
+        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
+    elif tipo == 'hardware':
+        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
+
+    estados_ticket = EstadoTicket.objects.all()
+    estados_atendimento = EstadoAtendimento.objects.all()
+    return render(request, 'tickets.html', {'tipo': tipo, 'ticket': ticket, 'estados_ticket': estados_ticket, 'estados_atendimento': estados_atendimento})
+
+
+def editar_ticket(request, tipo, ticket_id):
+    if tipo == 'software':
+        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
+    elif tipo == 'hardware':
+        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
+
+    if request.method == 'POST':
+        if tipo == 'software':
+            ticket.intervencaoDesc = request.POST.get('intervencaoDesc')
+            ticket.estado_ticket_id = request.POST.get('estado_ticket')
+            ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
+        elif tipo == 'hardware':
+            ticket.reparacaoDesc = request.POST.get('reparacaoDesc')
+            ticket.pecas = request.POST.get('pecas')
+            ticket.estado_ticket_id = request.POST.get('estado_ticket')
+            ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
+
+        ticket.save()
+
+        return redirect('lista_tickets')
+    else:
+        return redirect('lista_tickets')
