@@ -1,0 +1,56 @@
+.btn {
+  width: 10rem;
+  height: 2rem;
+  border-radius: 20px;
+  border: 0;
+  background-color: #902fcf;
+  color: white;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.btn:hover {
+  transform: scale(1.05);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+.title {
+  text-align: center;
+  font-family: sans-serif;
+  margin: 1rem;
+}
+.truncate {
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Show ellipsis for truncated text */
+  width: 175px; /* Adjust width as needed */
+}
+.iconSelected {
+  border: 1px solid grey;
+  background: #dadada;
+  border-radius: 8px;
+  color: #902fcf;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.divChartSelected {
+  background: #767676;
+  border-radius: 8px;
+  color: white;
+}
