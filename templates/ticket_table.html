@@ -1,73 +1,76 @@
 <div class="Tickets">
-    <table class="mt-1" id="table">
-        <thead>
-            <tr class="Primeiro-tr">
-                <th>Tipo</th>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Descrição</th>
-                <th>Estado do Ticket</th>
-                <th>Estado do Atendimento</th>
-                <th>Data de Criação</th>
-                <th>Resolvido</th>
-                {% if user.is_staff %}
-                    <th>user</th>
-                {% endif %}
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ticket in tickets %}
-                <tr>
-                    <td>{{ ticket.tipo }}</td>
-                    <td>{{ ticket.id }}</td>
-                    <td>
-                        <div title="{{ ticket.title }}" class="truncate">
-                            {{ ticket.title }}
-                        </div>
-                    </td>
-                    <td>
-                        <div title="{{ ticket.description }}" class="truncate">
-                            {{ ticket.description }}
-                        </div>
-                    </td>
-                    <td>{{ ticket.estado_ticket.nome }}</td>
-                    <td>{{ ticket.estado_atendimento.nome }}</td>
-                    <td>{{ ticket.created_at }}</td>
-                    <td>{{ ticket.resolved }}</td>
-                    {% if user.is_staff %}
-                        <td>{{ ticket.user }}</td>
-                    {% endif %}
-                    <td>
-                        {% if user.is_staff %}
-                            <button
-                                    type="button"
-                                    class="btn"
-                                    style="background-color: #007bff; margin: 0.25rem;"
-                                    data-toggle="modal"
-                                    data-target="#editarModal{{ ticket.id }}"
-                                    onclick="editar_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
-                            >
-                                Editar
-                            </button>
-                        {% endif %}
-                        <button
-                                type="button"
-                                class="btn"
-                                style="background-color: #17a2b8; margin: 0.25rem;"
-                                data-toggle="modal"
-                                data-target="#detalhesModal{{ ticket.id }}"
-                                onclick="detalhes_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
-                        >
-                            Detalhes
-                        </button>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="7">Não há tickets.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class="mt-1" id="table">
+    <thead>
+      <tr class="Primeiro-tr">
+          <th>ID</th>
+          <th>Tipo</th>
+        <th>Título</th>
+        <th>Descrição</th>
+        <th>Estado do Ticket</th>
+        <th>Estado do Atendimento</th>
+        <th>Data de Criação</th>
+        <th>Resolvido</th>
+        {% if user.is_staff %}
+        <th>Utilizador</th>
+        {% endif %}
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ticket in tickets %}
+      <tr>
+        <td>
+          {% if ticket.tipo == 'Hardware' %} HW{{ ticket.id }} {% endif %} 
+          {% if ticket.tipo == 'Software' %} SW{{ ticket.id }}{% endif %}
+        </td>
+        <td>{{ ticket.tipo }}</td>
+        <td>
+          <div title="{{ ticket.title }}" class="truncate">
+            {{ ticket.title }}
+          </div>
+        </td>
+        <td>
+          <div title="{{ ticket.description }}" class="truncate">
+            {{ ticket.description }}
+          </div>
+        </td>
+        <td>{{ ticket.estado_ticket.nome }}</td>
+        <td>{{ ticket.estado_atendimento.nome }}</td>
+        <td>{{ ticket.created_at }}</td>
+        <td>{{ ticket.resolved }}</td>
+        {% if user.is_staff %}
+        <td>{{ ticket.user }}</td>
+        {% endif %}
+        <td>
+          {% if user.is_staff %}
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #007bff; margin: 0.25rem"
+            data-toggle="modal"
+            data-target="#editarModal{{ ticket.id }}"
+            onclick="editar_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
+          >
+            Editar
+          </button>
+          {% endif %}
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #17a2b8; margin: 0.25rem"
+            data-toggle="modal"
+            data-target="#detalhesModal{{ ticket.id }}"
+            onclick="detalhes_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
+          >
+            Detalhes
+          </button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">Não há tickets.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
