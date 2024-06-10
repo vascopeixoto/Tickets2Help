@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets, adicionar_ticket, download_software_tickets, editar_ticket, download_hardware_tickets, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
+from TicketsApp.views import chat_ticket, lista_tickets, adicionar_ticket, download_software_tickets, editar_ticket, download_hardware_tickets, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,4 +42,5 @@ urlpatterns = [
     path('tickets/software-estado-atendimento-doughnut-chart/', software_estado_atendimento_doughnut_chart, name='software_estado_atendimento_doughnut_chart'),   
     path('tickets/software-count-ticket-resolved-bar-chart/', software_count_ticket_resolved_bar_chart, name='software_count_ticket_resolved_bar_chart'),   
     path('download/software/', download_software_tickets, name='download_software_tickets'),
+    path('chat_ticket/<str:tipo>/<int:ticket_id>/', chat_ticket, name='chat_ticket'),
 ]

@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
+from .models import Message, SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendimento
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -10,7 +10,7 @@ from math import floor
 from collections import defaultdict
 from django.http import HttpResponse
 import csv
-
+from django.contrib.contenttypes.models import ContentType
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -32,6 +32,7 @@ def custom_login(request):
     return render(request, 'login.html', {'form': form})
 
 
+@login_required
 def custom_logout(request):
     logout(request)
     return redirect('login')
@@ -100,6 +101,7 @@ def adicionar_ticket(request):
     return render(request, 'tickets/adicionar_ticket.html')
 
 
+@login_required
 def editar_ticket(request, tipo, ticket_id):
     if tipo == 'Software':
         ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
@@ -126,6 +128,7 @@ def editar_ticket(request, tipo, ticket_id):
     return redirect('lista_tickets')
 
 
+@login_required
 def hardware_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
 
@@ -145,6 +148,7 @@ def hardware_estado_ticket_doughnut_chart(request):
     return JsonResponse(chart_data)
 
 
+@login_required
 def hardware_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
 
@@ -164,6 +168,7 @@ def hardware_estado_atendimento_doughnut_chart(request):
     return JsonResponse(chart_data)
 
 
+@login_required
 def hardware_count_ticket_resolved_bar_chart(request):
     resolved_tickets = HardwareTicket.objects.filter(resolved_at__isnull=False)
     day_counts = defaultdict(int)
@@ -181,6 +186,7 @@ def hardware_count_ticket_resolved_bar_chart(request):
     return JsonResponse(chart_data)
 
 
+@login_required
 def software_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
 
@@ -200,6 +206,7 @@ def software_estado_ticket_doughnut_chart(request):
     return JsonResponse(chart_data)
 
 
+@login_required
 def software_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
 
@@ -219,6 +226,7 @@ def software_estado_atendimento_doughnut_chart(request):
     return JsonResponse(chart_data)
 
 
+@login_required
 def software_count_ticket_resolved_bar_chart(request):
     resolved_tickets = SoftwareTicket.objects.filter(resolved_at__isnull=False)
     day_counts = defaultdict(int)
@@ -235,21 +243,25 @@ def software_count_ticket_resolved_bar_chart(request):
     }
     return JsonResponse(chart_data)
 
+
+@login_required
 def download_hardware_tickets(request):
     hardware_tickets = HardwareTicket.objects.all()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="hardware_tickets.csv"'
     response.write('\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Equipamento', 'Avaria', 'Descrição da reparação', 'Peças', 'Criado em', 'Resolvido?', 'Resolvido em'])
+    writer.writerow(
+        ['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Equipamento', 'Avaria',
+         'Descrição da reparação', 'Peças', 'Criado em', 'Resolvido?', 'Resolvido em'])
     for ticket in hardware_tickets:
         writer.writerow([
             'HW' + str(ticket.id),
             ticket.title,
             ticket.description,
-            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',  
-            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A', 
-            ticket.user.username,  
+            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',
+            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A',
+            ticket.user.username,
             ticket.equipamento,
             ticket.avaria,
             ticket.reparacaoDesc,
@@ -260,21 +272,24 @@ def download_hardware_tickets(request):
         ])
     return response
 
+
+@login_required
 def download_software_tickets(request):
     hardware_tickets = SoftwareTicket.objects.all()
     response = HttpResponse(content_type='text/csv; charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="software_tickets.csv"'
     response.write('\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Software', 'Descrição da necessidade', 'Descrição da intervenção', 'Criado em', 'Resolvido?', 'Resolvido em'])
+    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Software',
+                     'Descrição da necessidade', 'Descrição da intervenção', 'Criado em', 'Resolvido?', 'Resolvido em'])
     for ticket in hardware_tickets:
         writer.writerow([
             'SW' + str(ticket.id),
             ticket.title,
             ticket.description,
-            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',  
-            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A', 
-            ticket.user.username,  
+            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',
+            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A',
+            ticket.user.username,
             ticket.software,
             ticket.necessidadeDesc,
             ticket.intervencaoDesc,
@@ -283,3 +298,33 @@ def download_software_tickets(request):
             ticket.resolved_at,
         ])
     return response
+
+@login_required
+def chat_ticket(request, tipo, ticket_id):
+    if tipo == 'Software':
+        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
+        ticket_content_type = ContentType.objects.get_for_model(SoftwareTicket)
+    elif tipo == 'Hardware':
+        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
+        ticket_content_type = ContentType.objects.get_for_model(HardwareTicket)
+
+    messages = Message.objects.filter(ticket_content_type=ticket_content_type, ticket_object_id=ticket.id).order_by('timestamp')
+
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        print(f"Received POST request with text: {text}")  # Debugging
+        if text:
+            Message.objects.create(
+                ticket_content_type=ticket_content_type,
+                ticket_object_id=ticket.id,
+                sender=request.user,
+                text=text
+            )
+            print("Message created successfully")  # Debugging
+        return redirect('chat_ticket', tipo=tipo, ticket_id=ticket_id)
+
+    context = {
+        'ticket': ticket,
+        'messages': messages
+    }
+    return render(request, 'chat_ticket.html', context)

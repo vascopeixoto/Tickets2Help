@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    {% block title %}
+        <title>Tickets2Help</title>
+    {% endblock %} {% include 'base/head.html' %}
+</head>
+<body style="background: #efefef">
+{% include 'base/header.html' %}
+<div class="card m-2 p-2">
+    {% block content %}
+        <h1>Chat - Ticket: {{ ticket.title }}</h1>
+
+        <div id="chat-box">
+            {% for message in messages %}
+                <div class="message">
+                    <strong>{{ message.sender.username }}:</strong> {{ message.text }}
+                    <span class="timestamp">{{ message.timestamp }}</span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="3" class="form-control" placeholder="Digite sua mensagem..."></textarea>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    {% endblock %}
+</div>
+</body>
+</html>
