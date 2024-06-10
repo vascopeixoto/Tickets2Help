@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -5,7 +6,6 @@ from .models import SoftwareTicket, HardwareTicket, EstadoTicket, EstadoAtendime
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.utils.timezone import now
 from math import floor
 from collections import defaultdict
 
@@ -52,9 +52,13 @@ def lista_tickets(request):
     tickets = software_tickets + hardware_tickets
 
     tickets.sort(key=lambda x: x.created_at, reverse=True)
-
+    estados_ticket = EstadoTicket.objects.all()
+    estados_atendimento = EstadoAtendimento.objects.all()
+    
     context = {
-        'tickets': tickets
+        'tickets': tickets,
+        'estados_ticket': estados_ticket,
+        'estados_atendimento': estados_atendimento
     }
     return render(request, 'tickets.html', context)
 
@@ -93,45 +97,35 @@ def adicionar_ticket(request):
     return render(request, 'tickets/adicionar_ticket.html')
 
 
-def ticket_edit_details(request, tipo, ticket_id):
-    ticket = None
-    if tipo == 'software':
-        ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
-    elif tipo == 'hardware':
-        ticket = get_object_or_404(HardwareTicket, id=ticket_id)
-
-    estados_ticket = EstadoTicket.objects.all()
-    estados_atendimento = EstadoAtendimento.objects.all()
-    return render(request, 'tickets.html', {'tipo': tipo, 'ticket': ticket, 'estados_ticket': estados_ticket, 'estados_atendimento': estados_atendimento})
-
-
 def editar_ticket(request, tipo, ticket_id):
-    if tipo == 'software':
+    if tipo == 'Software':
         ticket = get_object_or_404(SoftwareTicket, id=ticket_id)
-    elif tipo == 'hardware':
+    elif tipo == 'Hardware':
         ticket = get_object_or_404(HardwareTicket, id=ticket_id)
 
     if request.method == 'POST':
-        if tipo == 'software':
+        if tipo == 'Software':
             ticket.intervencaoDesc = request.POST.get('intervencaoDesc')
             ticket.estado_ticket_id = request.POST.get('estado_ticket')
             ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
-        elif tipo == 'hardware':
+            ticket.resolved = request.POST.get('resolved')
+        elif tipo == 'Hardware':
             ticket.reparacaoDesc = request.POST.get('reparacaoDesc')
             ticket.pecas = request.POST.get('pecas')
             ticket.estado_ticket_id = request.POST.get('estado_ticket')
             ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
+            ticket.resolved = request.POST.get('resolved')
 
+        if ticket.resolved:
+            ticket.resolved_at = datetime.now()
+            
         ticket.save()
 
-        return redirect('lista_tickets')
-    else:
-        return redirect('lista_tickets')
+    return redirect('lista_tickets')
 
 def hardware_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
-    
-    # Prepare data for the chart
+
     labels = []
     data = []
 
@@ -144,13 +138,12 @@ def hardware_estado_ticket_doughnut_chart(request):
         'labels': labels,
         'data': data,
     }
-    
+
     return JsonResponse(chart_data)
 
 def hardware_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
-    
-    # Prepare data for the chart
+
     labels = []
     data = []
 
@@ -163,7 +156,7 @@ def hardware_estado_atendimento_doughnut_chart(request):
         'labels': labels,
         'data': data,
     }
-    
+
     return JsonResponse(chart_data)
 
 def hardware_count_ticket_resolved_bar_chart(request):
@@ -184,8 +177,7 @@ def hardware_count_ticket_resolved_bar_chart(request):
 
 def software_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
-    
-    # Prepare data for the chart
+
     labels = []
     data = []
 
@@ -198,13 +190,12 @@ def software_estado_ticket_doughnut_chart(request):
         'labels': labels,
         'data': data,
     }
-    
+
     return JsonResponse(chart_data)
 
 def software_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
-    
-    # Prepare data for the chart
+
     labels = []
     data = []
 
@@ -217,7 +208,7 @@ def software_estado_atendimento_doughnut_chart(request):
         'labels': labels,
         'data': data,
     }
-    
+
     return JsonResponse(chart_data)
 
 def software_count_ticket_resolved_bar_chart(request):

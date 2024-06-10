@@ -23,6 +23,7 @@ class Ticket(models.Model):
     estado_atendimento = models.ForeignKey(EstadoAtendimento, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     resolved_at = models.DateTimeField(null=True)
+    resolved = models.BooleanField(null=True)
 
     class Meta:
         abstract = True

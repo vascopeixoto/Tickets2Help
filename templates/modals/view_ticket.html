@@ -28,13 +28,14 @@
           <strong>Estado do Ticket:</strong> {{ ticket.estado_ticket.nome }}
         </p>
         <p>
-          <strong>Estado do Atendimento:</strong> {{
-          ticket.estado_atendimento.nome }}
+          <strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento.nome }}
         </p>
         <p><strong>Software:</strong> {{ ticket.software }}</p>
         <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
         <p><strong>Intervenção Desc:</strong> {{ ticket.intervencaoDesc }}</p>
         <p><strong>User:</strong> {{ ticket.user }}</p>
+        <p><strong>Resolvido:</strong> {{ ticket.resolved }}</p>
+            
         {% elif ticket.tipo == 'Hardware' %}
         <p><strong>Título:</strong> {{ ticket.title }}</p>
         <p><strong>Descrição:</strong> {{ ticket.description }}</p>
@@ -43,8 +44,7 @@
           <strong>Estado do Ticket:</strong> {{ ticket.estado_ticket.nome }}
         </p>
         <p>
-          <strong>Estado do Atendimento:</strong> {{
-          ticket.estado_atendimento.nome }}
+          <strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento.nome }}
         </p>
         <p><strong>Equipamento:</strong> {{ ticket.equipamento }}</p>
         <p><strong>Avaria:</strong> {{ ticket.avaria }}</p>

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets, adicionar_ticket, editar_ticket, ticket_edit_details, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
+from TicketsApp.views import lista_tickets, adicionar_ticket, editar_ticket, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
