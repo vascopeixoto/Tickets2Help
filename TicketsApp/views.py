@@ -241,20 +241,21 @@ def download_hardware_tickets(request):
     response['Content-Disposition'] = 'attachment; filename="hardware_tickets.csv"'
     response.write('\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Equipamento', 'Avaria', 'Descrição da reparação', 'Peças', 'Criado em', 'Resolvido em',])
+    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Equipamento', 'Avaria', 'Descrição da reparação', 'Peças', 'Criado em', 'Resolvido?', 'Resolvido em'])
     for ticket in hardware_tickets:
         writer.writerow([
             'HW' + str(ticket.id),
             ticket.title,
             ticket.description,
-            ticket.estado_ticket.nome,  
-            ticket.estado_atendimento.nome, 
+            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',  
+            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A', 
             ticket.user.username,  
             ticket.equipamento,
             ticket.avaria,
             ticket.reparacaoDesc,
             ticket.pecas,
             ticket.created_at,
+            ticket.resolved,
             ticket.resolved_at,
         ])
     return response
@@ -265,19 +266,20 @@ def download_software_tickets(request):
     response['Content-Disposition'] = 'attachment; filename="software_tickets.csv"'
     response.write('\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Software', 'Descrição da necessidade', 'Descrição da intervenção', 'Criado em', 'Resolvido em',])
+    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Software', 'Descrição da necessidade', 'Descrição da intervenção', 'Criado em', 'Resolvido?', 'Resolvido em'])
     for ticket in hardware_tickets:
         writer.writerow([
             'SW' + str(ticket.id),
             ticket.title,
             ticket.description,
-            ticket.estado_ticket.nome,  
-            ticket.estado_atendimento.nome, 
+            ticket.estado_ticket.nome if ticket.estado_ticket_id else 'N/A',  
+            ticket.estado_atendimento.nome if ticket.estado_atendimento_id else 'N/A', 
             ticket.user.username,  
             ticket.software,
             ticket.necessidadeDesc,
             ticket.intervencaoDesc,
             ticket.created_at,
+            ticket.resolved,
             ticket.resolved_at,
         ])
     return response
