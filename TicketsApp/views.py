@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from math import floor
 from collections import defaultdict
 
+
 def custom_login(request):
     if request.user.is_authenticated:
         print("Usuário já autenticado:", request.user)
@@ -54,7 +55,7 @@ def lista_tickets(request):
     tickets.sort(key=lambda x: x.created_at, reverse=True)
     estados_ticket = EstadoTicket.objects.all()
     estados_atendimento = EstadoAtendimento.objects.all()
-    
+
     context = {
         'tickets': tickets,
         'estados_ticket': estados_ticket,
@@ -113,14 +114,15 @@ def editar_ticket(request, tipo, ticket_id):
             ticket.pecas = request.POST.get('pecas')
             ticket.estado_ticket_id = request.POST.get('estado_ticket')
             ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
-            
+
         ticket.resolved = request.POST.get('resolved') == 'on'
         if ticket.resolved:
             ticket.resolved_at = datetime.now()
-            
+
         ticket.save()
 
     return redirect('lista_tickets')
+
 
 def hardware_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
@@ -140,6 +142,7 @@ def hardware_estado_ticket_doughnut_chart(request):
 
     return JsonResponse(chart_data)
 
+
 def hardware_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
 
@@ -158,6 +161,7 @@ def hardware_estado_atendimento_doughnut_chart(request):
 
     return JsonResponse(chart_data)
 
+
 def hardware_count_ticket_resolved_bar_chart(request):
     resolved_tickets = HardwareTicket.objects.filter(resolved_at__isnull=False)
     day_counts = defaultdict(int)
@@ -173,6 +177,7 @@ def hardware_count_ticket_resolved_bar_chart(request):
         'data': data,
     }
     return JsonResponse(chart_data)
+
 
 def software_estado_ticket_doughnut_chart(request):
     estados = EstadoTicket.objects.all()
@@ -192,6 +197,7 @@ def software_estado_ticket_doughnut_chart(request):
 
     return JsonResponse(chart_data)
 
+
 def software_estado_atendimento_doughnut_chart(request):
     estados = EstadoAtendimento.objects.all()
 
@@ -209,6 +215,7 @@ def software_estado_atendimento_doughnut_chart(request):
     }
 
     return JsonResponse(chart_data)
+
 
 def software_count_ticket_resolved_bar_chart(request):
     resolved_tickets = SoftwareTicket.objects.filter(resolved_at__isnull=False)

@@ -1,5 +1,5 @@
 <div
-  style="
+        style="
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -8,58 +8,58 @@
     background: #bebebe;
   "
 >
-  <div
-    style="display: flex; gap: 1rem; cursor: pointer"
-    onclick="window.location='{% url 'lista_tickets' %}'"
-  >
-    <h3 class="title">Tickets2Help</h3>
-  </div>
+    <div
+            style="display: flex; gap: 1rem; cursor: pointer"
+            onclick="window.location='{% url 'lista_tickets' %}'"
+    >
+        <h3 class="title">Tickets2Help</h3>
+    </div>
 
-  <div
-    style="display: flex; flex-direction: row; gap: 1rem; margin-right: 1rem"
-  >
-    {% if user.is_authenticated %}
-    <form
-      id="logout-form"
-      action="{% url 'logout' %}"
-      method="post"
-      style="display: inline"
+    <div
+            style="display: flex; flex-direction: row; gap: 1rem; margin-right: 1rem"
     >
-      {% csrf_token %}
-      <button
-        type="submit"
-        class="btn"
-        style="
+        {% if user.is_authenticated %}
+            <form
+                    id="logout-form"
+                    action="{% url 'logout' %}"
+                    method="post"
+                    style="display: inline"
+            >
+                {% csrf_token %}
+                <button
+                        type="submit"
+                        class="btn"
+                        style="
           font-family: sans-serif;
           display: flex;
           align-items: center;
           justify-content: center;
         "
-      >
-        Logout
-      </button>
-    </form>
-    {% endif %} {% if user.is_staff %}
-    <form
-      id="logout-form"
-      action="{% url 'admin:index' %}"
-      method="post"
-      style="display: inline"
-    >
-      {% csrf_token %}
-      <button
-        type="submit"
-        class="btn"
-        style="
+                >
+                    Logout
+                </button>
+            </form>
+        {% endif %} {% if user.is_staff %}
+        <form
+                id="logout-form"
+                action="{% url 'admin:index' %}"
+                method="post"
+                style="display: inline"
+        >
+            {% csrf_token %}
+            <button
+                    type="submit"
+                    class="btn"
+                    style="
           font-family: sans-serif;
           display: flex;
           align-items: center;
           justify-content: center;
         "
-      >
-        Área Admin
-      </button>
-    </form>
+            >
+                Área Admin
+            </button>
+        </form>
     {% endif %}
-  </div>
+    </div>
 </div>

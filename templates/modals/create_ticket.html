@@ -1,94 +1,94 @@
 <!-- Modal -->
 <div
-  class="modal fade"
-  id="addTicketModal"
-  tabindex="-1"
-  aria-labelledby="addTicketModalLabel"
-  aria-hidden="true"
+        class="modal fade"
+        id="addTicketModal"
+        tabindex="-1"
+        aria-labelledby="addTicketModalLabel"
+        aria-hidden="true"
 >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addTicketModalLabel">Adicionar Ticket</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form
-          id="addTicketForm"
-          method="post"
-          action="{% url 'adicionar_ticket' %}"
-        >
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="tipoTicket">Tipo de Ticket</label>
-            <select
-              class="form-control"
-              id="tipoTicket"
-              name="tipoTicket"
-              required
-            >
-              <option value="">Selecione um</option>
-              <option value="software">Software</option>
-              <option value="hardware">Hardware</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="title">Título</label>
-            <input
-              type="text"
-              class="form-control"
-              id="title"
-              name="title"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="description">Descrição</label>
-            <textarea
-              class="form-control"
-              id="description"
-              name="description"
-              required
-            ></textarea>
-          </div>
-          <div class="form-group" id="softwareFields" style="display: none">
-            <label for="software">Software</label>
-            <input
-              type="text"
-              class="form-control"
-              id="software"
-              name="software"
-            />
-            <label for="necessidadeDesc">Descrição da Necessidade</label>
-            <textarea
-              class="form-control"
-              id="necessidadeDesc"
-              name="necessidadeDesc"
-            ></textarea>
-          </div>
-          <div class="form-group" id="hardwareFields" style="display: none">
-            <label for="equipamento">Equipamento</label>
-            <input
-              type="text"
-              class="form-control"
-              id="equipamento"
-              name="equipamento"
-            />
-            <label for="avaria">Avaria</label>
-            <textarea class="form-control" id="avaria" name="avaria"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">
-            Adicionar Ticket
-          </button>
-        </form>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTicketModalLabel">Adicionar Ticket</h5>
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form
+                        id="addTicketForm"
+                        method="post"
+                        action="{% url 'adicionar_ticket' %}"
+                >
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="tipoTicket">Tipo de Ticket</label>
+                        <select
+                                class="form-control"
+                                id="tipoTicket"
+                                name="tipoTicket"
+                                required
+                        >
+                            <option value="">Selecione um</option>
+                            <option value="software">Software</option>
+                            <option value="hardware">Hardware</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Título</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="title"
+                                name="title"
+                                required
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descrição</label>
+                        <textarea
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                required
+                        ></textarea>
+                    </div>
+                    <div class="form-group" id="softwareFields" style="display: none">
+                        <label for="software">Software</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="software"
+                                name="software"
+                        />
+                        <label for="necessidadeDesc">Descrição da Necessidade</label>
+                        <textarea
+                                class="form-control"
+                                id="necessidadeDesc"
+                                name="necessidadeDesc"
+                        ></textarea>
+                    </div>
+                    <div class="form-group" id="hardwareFields" style="display: none">
+                        <label for="equipamento">Equipamento</label>
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="equipamento"
+                                name="equipamento"
+                        />
+                        <label for="avaria">Avaria</label>
+                        <textarea class="form-control" id="avaria" name="avaria"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Adicionar Ticket
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
