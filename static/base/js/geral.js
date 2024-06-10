@@ -54,3 +54,21 @@ document.getElementById("tipoTicket").addEventListener("change", function () {
     document.getElementById("hardwareFields").style.display = "block";
   }
 });
+
+function downloadTicketCsv() {
+  let hardwareUrl = "/download/hardware/";
+  const hardwareAnchor = document.createElement("a");
+  hardwareAnchor.href = hardwareUrl;
+  hardwareAnchor.download = "hardware_tickets.csv";
+  document.body.appendChild(hardwareAnchor);
+  hardwareAnchor.click();
+  document.body.removeChild(hardwareAnchor);
+
+  let softwareUrl = "/download/software/";
+  const softwareAnchor = document.createElement("a");
+  softwareAnchor.href = softwareUrl;
+  softwareAnchor.download = "software_tickets.csv";
+  document.body.appendChild(softwareAnchor);
+  softwareAnchor.click();
+  document.body.removeChild(softwareAnchor);
+}

@@ -8,6 +8,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from math import floor
 from collections import defaultdict
+from django.http import HttpResponse
+import csv
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -226,3 +228,50 @@ def software_count_ticket_resolved_bar_chart(request):
         'data': data,
     }
     return JsonResponse(chart_data)
+
+def download_hardware_tickets(request):
+    hardware_tickets = HardwareTicket.objects.all()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="hardware_tickets.csv"'
+    response.write('\ufeff'.encode('utf8'))
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Equipamento', 'Avaria', 'Descrição da reparação', 'Peças', 'Criado em', 'Resolvido em',])
+    for ticket in hardware_tickets:
+        writer.writerow([
+            'HW' + str(ticket.id),
+            ticket.title,
+            ticket.description,
+            ticket.estado_ticket.nome,  
+            ticket.estado_atendimento.nome, 
+            ticket.user.username,  
+            ticket.equipamento,
+            ticket.avaria,
+            ticket.reparacaoDesc,
+            ticket.pecas,
+            ticket.created_at,
+            ticket.resolved_at,
+        ])
+    return response
+
+def download_software_tickets(request):
+    hardware_tickets = SoftwareTicket.objects.all()
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="software_tickets.csv"'
+    response.write('\ufeff'.encode('utf8'))
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Título', 'Descrição', 'Estado Ticket', 'Estado Atendimento', 'Utilizador', 'Software', 'Descrição da necessidade', 'Descrição da intervenção', 'Criado em', 'Resolvido em',])
+    for ticket in hardware_tickets:
+        writer.writerow([
+            'SW' + str(ticket.id),
+            ticket.title,
+            ticket.description,
+            ticket.estado_ticket.nome,  
+            ticket.estado_atendimento.nome, 
+            ticket.user.username,  
+            ticket.software,
+            ticket.necessidadeDesc,
+            ticket.intervencaoDesc,
+            ticket.created_at,
+            ticket.resolved_at,
+        ])
+    return response

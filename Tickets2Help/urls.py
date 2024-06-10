@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets, adicionar_ticket, editar_ticket, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
+from TicketsApp.views import lista_tickets, adicionar_ticket, download_software_tickets, editar_ticket, download_hardware_tickets, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +34,12 @@ urlpatterns = [
     path('software-estado-ticket-doughnut-chart/', software_estado_ticket_doughnut_chart, name='software_estado_ticket_doughnut_chart'),
     path('software-estado-atendimento-doughnut-chart/', software_estado_atendimento_doughnut_chart, name='software_estado_atendimento_doughnut_chart'),   
     path('software-count-ticket-resolved-bar-chart/', software_count_ticket_resolved_bar_chart, name='software_count_ticket_resolved_bar_chart'),   
+    path('download/hardware/', download_hardware_tickets, name='download_hardware_tickets'),
+    path('tickets/hardware-estado-ticket-doughnut-chart/', hardware_estado_ticket_doughnut_chart, name='hardware_estado_ticket_doughnut_chart'),
+    path('tickets/hardware-estado-atendimento-doughnut-chart/', hardware_estado_atendimento_doughnut_chart, name='hardware_estado_atendimento_doughnut_chart'),   
+    path('tickets/hardware-count-ticket-resolved-bar-chart/', hardware_count_ticket_resolved_bar_chart, name='hardware_count_ticket_resolved_bar_chart'), 
+    path('tickets/software-estado-ticket-doughnut-chart/', software_estado_ticket_doughnut_chart, name='software_estado_ticket_doughnut_chart'),
+    path('tickets/software-estado-atendimento-doughnut-chart/', software_estado_atendimento_doughnut_chart, name='software_estado_atendimento_doughnut_chart'),   
+    path('tickets/software-count-ticket-resolved-bar-chart/', software_count_ticket_resolved_bar_chart, name='software_count_ticket_resolved_bar_chart'),   
+    path('download/software/', download_software_tickets, name='download_software_tickets'),
 ]
