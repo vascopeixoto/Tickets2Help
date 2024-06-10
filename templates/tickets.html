@@ -13,21 +13,23 @@
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex justify-content-between align-items-center">
           <h3 class="mr-3">Tickets</h3>
-          <div
-            class="mr-2 iconSelected"
-            style="cursor: pointer"
-            id="tableIcon"
-            onclick="changeToTableView()"
-          >
-            <i class="fa-solid fa-table"></i>
-          </div>
-          <div
-            id="chartIcon"
-            style="cursor: pointer"
-            onclick="changeToChartView()"
-          >
-            <i class="fa-solid fa-chart-area"></i>
-          </div>
+            {% if user.is_staff %} 
+              <div
+                class="mr-2 iconSelected"
+                style="cursor: pointer"
+                id="tableIcon"
+                onclick="changeToTableView()"
+              >
+                <i class="fa-solid fa-table"></i>
+              </div>
+              <div
+                id="chartIcon"
+                style="cursor: pointer"
+                onclick="changeToChartView()"
+              >
+                <i class="fa-solid fa-chart-area"></i>
+              </div>
+            {% endif %} 
         </div>
         <button
           type="button"
@@ -104,10 +106,11 @@
                         <input type="text" class="form-control" id="intervencaoDesc" name="intervencaoDesc" value="{{ ticket.intervencaoDesc }}">
                     </div>
                     <p><strong>User:</strong> {{ ticket.user }}</p>
-                    <div class="form-group">
-                        <label for="resolved">Resolved:</label>
-                        <input type="checkbox" class="form-control" id="resolved" name="resolved" {% if ticket.resolved %} checked {% endif %}>
+                    <div class="form-group" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <label for="resolved" style="margin: 0;">Resolved:</label>
+                        <input type="checkbox" style="width: 20px;" class="form-control" id="resolved" name="resolved" {% if ticket.resolved %} checked {% endif %}>
                     </div>
+                    <p><strong>Resolvido a:</strong>{{ ticket.resolved_at }} </p>
                 {% elif ticket.tipo == 'Hardware' %}
                     <p><strong>Título:</strong> {{ ticket.title }}</p>
                     <p><strong>Descrição:</strong> {{ ticket.description }}</p>
@@ -139,10 +142,12 @@
                         <input type="text" class="form-control" id="pecas" name="pecas" value="{{ ticket.pecas }}">
                     </div>
                     <p><strong>User:</strong> {{ ticket.user }}</p>
-                    <div class="form-group">
-                        <label for="resolved">Resolved:</label>
-                        <input type="checkbox" class="form-control" id="resolved" name="resolved" {% if ticket.resolved %} checked {% endif %}>
+                    <div class="form-group" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <label for="resolved" style="margin: 0;">Resolved:</label>
+                        <input type="checkbox" style="width: 20px;" class="form-control" id="resolved" name="resolved" {% if ticket.resolved %} checked {% endif %}>
                     </div>
+                    <p><strong>Resolvido a:</strong>{{ ticket.resolved_at }} </p>
+                    
                 {% endif %}
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
             </form>

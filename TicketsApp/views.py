@@ -108,14 +108,13 @@ def editar_ticket(request, tipo, ticket_id):
             ticket.intervencaoDesc = request.POST.get('intervencaoDesc')
             ticket.estado_ticket_id = request.POST.get('estado_ticket')
             ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
-            ticket.resolved = request.POST.get('resolved')
         elif tipo == 'Hardware':
             ticket.reparacaoDesc = request.POST.get('reparacaoDesc')
             ticket.pecas = request.POST.get('pecas')
             ticket.estado_ticket_id = request.POST.get('estado_ticket')
             ticket.estado_atendimento_id = request.POST.get('estado_atendimento')
-            ticket.resolved = request.POST.get('resolved')
-
+            
+        ticket.resolved = request.POST.get('resolved') == 'on'
         if ticket.resolved:
             ticket.resolved_at = datetime.now()
             

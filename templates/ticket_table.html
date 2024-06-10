@@ -1,19 +1,24 @@
 <table class="mt-1" id="table">
   <thead>
     <tr>
+      <th>Tipo</th>
       <th>ID</th>
       <th>Título</th>
       <th>Descrição</th>
       <th>Estado do Ticket</th>
       <th>Estado do Atendimento</th>
-      <th>Tipo</th>
       <th>Data de Criação</th>
+      <th>Resolvido</th>
       <th>Ações</th>
+        {% if user.is_staff %} 
+            <th>user</th>
+        {% endif %}
     </tr>
   </thead>
   <tbody>
     {% for ticket in tickets %}
     <tr>
+      <td>{{ ticket.tipo }}</td>
       <td>{{ ticket.id }}</td>
       <td>
         <div title="{{ ticket.title }}" class="truncate">
@@ -27,8 +32,11 @@
       </td>
       <td>{{ ticket.estado_ticket.nome }}</td>
       <td>{{ ticket.estado_atendimento.nome }}</td>
-      <td>{{ ticket.tipo }}</td>
       <td>{{ ticket.created_at }}</td>
+      <td>{{ ticket.resolved }}</td>
+        {% if user.is_staff %} 
+            <td>{{ ticket.user }}</td>
+        {% endif %}
       <td>
         {% if user.is_staff %}
         <button

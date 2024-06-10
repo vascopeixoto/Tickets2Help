@@ -34,7 +34,7 @@
         <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
         <p><strong>Intervenção Desc:</strong> {{ ticket.intervencaoDesc }}</p>
         <p><strong>User:</strong> {{ ticket.user }}</p>
-        <p><strong>Resolvido:</strong> {{ ticket.resolved }}</p>
+        <p><strong>Resolvido:</strong> {{ ticket.resolved }} - {{ ticket.resolved_at }} </p>
             
         {% elif ticket.tipo == 'Hardware' %}
         <p><strong>Título:</strong> {{ ticket.title }}</p>
@@ -51,6 +51,7 @@
         <p><strong>Reparação Desc:</strong> {{ ticket.reparacaoDesc }}</p>
         <p><strong>Peças:</strong> {{ ticket.pecas }}</p>
         <p><strong>User:</strong> {{ ticket.user }}</p>
+        <p><strong>Resolvido:</strong> {{ ticket.resolved }} - {{ ticket.resolved_at }} </p>
         {% endif %}
       </div>
     </div>
