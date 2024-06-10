@@ -1,5 +1,9 @@
+html {
+    --bg-panel: #F4F4F4;
+}
+
 .btn {
-    width: 10rem;
+    width: 7rem;
     height: 2rem;
     border-radius: 20px;
     border: 0;
@@ -13,6 +17,7 @@
 
 .btn:hover {
     transform: scale(1.05);
+    color: white;
 }
 
 table {
@@ -20,16 +25,42 @@ table {
     border-collapse: collapse;
 }
 
-table,
-th,
-td {
-    border: 1px solid black;
+.Tickets {
+    display: flex;
+    flex-direction: column;
+    border-radius: 7px;
+    padding: 20px;
+    overflow-x: auto;
 }
 
-th,
+th {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
 td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+
+tr:hover {
+    background-color: var(--bg-panel);
+}
+
+
+.Tickets table {
+    width: 100%
+}
+
+.Tickets td button {
+    border-radius: 20px;
+}
+
+.Primeiro-tr {
+    background-color: var(--bg-panel);
 }
 
 .title {
