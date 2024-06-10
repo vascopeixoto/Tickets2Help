@@ -10,7 +10,7 @@ function goToHardwareDiv() {
   ) {
     window.stop();
     document.getElementById("softwareContent").style = "display: none;";
-    document.getElementById("hardwareContent").style = "display: initial;";
+    document.getElementById("hardwareContent").style = "display: flex;";
     document.getElementById("softwareDiv").classList.remove("divChartSelected");
     document.getElementById("hardwareDiv").classList.add("divChartSelected");
     fetch("hardware-estado-ticket-doughnut-chart/")
@@ -31,18 +31,6 @@ function goToHardwareDiv() {
         renderHardwareCountTicketResolvedChart(data);
       })
       .catch((error) => console.error("Error:", error));
-  }
-}
-function goToHSoftwareDiv() {
-  if (
-    !document
-      .getElementById("softwareDiv")
-      .classList.contains("divChartSelected")
-  ) {
-    document.getElementById("hardwareContent").style = "display: none;";
-    document.getElementById("softwareContent").style = "display: initial;";
-    document.getElementById("hardwareDiv").classList.remove("divChartSelected");
-    document.getElementById("softwareDiv").classList.add("divChartSelected");
   }
 }
 function renderHardwareEstadoTicketDoughnutChart(data) {

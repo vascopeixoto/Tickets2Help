@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from TicketsApp.views import lista_tickets, adicionar_ticket, editar_ticket, ticket_edit_details, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart
+from TicketsApp.views import lista_tickets, adicionar_ticket, editar_ticket, ticket_edit_details, hardware_estado_ticket_doughnut_chart, hardware_estado_atendimento_doughnut_chart, hardware_count_ticket_resolved_bar_chart, software_estado_ticket_doughnut_chart, software_estado_atendimento_doughnut_chart, software_count_ticket_resolved_bar_chart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,8 @@ urlpatterns = [
     path('editar_ticket/<str:tipo>/<int:ticket_id>/', editar_ticket, name='editar_ticket'),
     path('hardware-estado-ticket-doughnut-chart/', hardware_estado_ticket_doughnut_chart, name='hardware_estado_ticket_doughnut_chart'),
     path('hardware-estado-atendimento-doughnut-chart/', hardware_estado_atendimento_doughnut_chart, name='hardware_estado_atendimento_doughnut_chart'),   
-    path('hardware-count-ticket-resolved-bar-chart/', hardware_count_ticket_resolved_bar_chart, name='hardware_count_ticket_resolved_bar_chart'),   
+    path('hardware-count-ticket-resolved-bar-chart/', hardware_count_ticket_resolved_bar_chart, name='hardware_count_ticket_resolved_bar_chart'), 
+    path('software-estado-ticket-doughnut-chart/', software_estado_ticket_doughnut_chart, name='software_estado_ticket_doughnut_chart'),
+    path('software-estado-atendimento-doughnut-chart/', software_estado_atendimento_doughnut_chart, name='software_estado_atendimento_doughnut_chart'),   
+    path('software-count-ticket-resolved-bar-chart/', software_count_ticket_resolved_bar_chart, name='software_count_ticket_resolved_bar_chart'),   
 ]

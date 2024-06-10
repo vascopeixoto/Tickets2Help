@@ -181,3 +181,57 @@ def hardware_count_ticket_resolved_bar_chart(request):
         'data': data,
     }
     return JsonResponse(chart_data)
+
+def software_estado_ticket_doughnut_chart(request):
+    estados = EstadoTicket.objects.all()
+    
+    # Prepare data for the chart
+    labels = []
+    data = []
+
+    for estado in estados:
+        labels.append(estado.nome)
+        count = SoftwareTicket.objects.filter(estado_ticket=estado).count()
+        data.append(count)
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    
+    return JsonResponse(chart_data)
+
+def software_estado_atendimento_doughnut_chart(request):
+    estados = EstadoAtendimento.objects.all()
+    
+    # Prepare data for the chart
+    labels = []
+    data = []
+
+    for estado in estados:
+        labels.append(estado.nome)
+        count = SoftwareTicket.objects.filter(estado_atendimento=estado).count()
+        data.append(count)
+
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    
+    return JsonResponse(chart_data)
+
+def software_count_ticket_resolved_bar_chart(request):
+    resolved_tickets = SoftwareTicket.objects.filter(resolved_at__isnull=False)
+    day_counts = defaultdict(int)
+    for ticket in resolved_tickets:
+        time_difference = ticket.resolved_at - ticket.created_at
+        days_difference = floor(time_difference.total_seconds() / 86400)  # 86400 seconds in a day
+        day_counts[days_difference] += 1
+
+    labels = sorted(day_counts.keys())
+    data = [day_counts[day] for day in labels]
+    chart_data = {
+        'labels': labels,
+        'data': data,
+    }
+    return JsonResponse(chart_data)
