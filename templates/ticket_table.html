@@ -65,13 +65,16 @@
                         Detalhes
                     </button>
 
-                    <a
-                            class="btn"
-                            style="background-color: #17a2b8; margin: 0.25rem"
-                            href="{% url 'chat_ticket' tipo=ticket.tipo ticket_id=ticket.id|default:0 %}"
-                    >
-                        Chat
-                    </a>
+                    {% if not ticket.resolved %}
+                        <a
+                                class="btn"
+                                style="background-color: #17a2b8; margin: 0.25rem"
+                                href="{% url 'chat_ticket' tipo=ticket.tipo ticket_id=ticket.id|default:0 %}"
+                        >
+                            Chat
+                        </a>
+                    {% endif %}
+                
                 </td>
             </tr>
         {% empty %}

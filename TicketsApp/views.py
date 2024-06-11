@@ -12,6 +12,7 @@ from django.http import HttpResponse
 import csv
 from django.contrib.contenttypes.models import ContentType
 
+
 def custom_login(request):
     if request.user.is_authenticated:
         print("Usuário já autenticado:", request.user)
@@ -299,6 +300,7 @@ def download_software_tickets(request):
         ])
     return response
 
+
 @login_required
 def chat_ticket(request, tipo, ticket_id):
     if tipo == 'Software':
@@ -308,11 +310,11 @@ def chat_ticket(request, tipo, ticket_id):
         ticket = get_object_or_404(HardwareTicket, id=ticket_id)
         ticket_content_type = ContentType.objects.get_for_model(HardwareTicket)
 
-    messages = Message.objects.filter(ticket_content_type=ticket_content_type, ticket_object_id=ticket.id).order_by('timestamp')
+    messages = Message.objects.filter(ticket_content_type=ticket_content_type, ticket_object_id=ticket.id).order_by(
+        'timestamp')
 
     if request.method == 'POST':
         text = request.POST.get('text')
-        print(f"Received POST request with text: {text}")  # Debugging
         if text:
             Message.objects.create(
                 ticket_content_type=ticket_content_type,
@@ -320,7 +322,6 @@ def chat_ticket(request, tipo, ticket_id):
                 sender=request.user,
                 text=text
             )
-            print("Message created successfully")  # Debugging
         return redirect('chat_ticket', tipo=tipo, ticket_id=ticket_id)
 
     context = {
