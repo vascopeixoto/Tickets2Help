@@ -110,7 +110,7 @@ tr:hover {
 
 .chat-messages {
     border-radius: 10px;
-    flex: 1;
+    height: 35rem;
     overflow-y: auto;
     padding: 1rem;
     width: 95%;

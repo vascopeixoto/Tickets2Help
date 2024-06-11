@@ -71,7 +71,7 @@
                 aria-labelledby="editarModalLabel"
                 aria-hidden="true"
         >
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editarModalLabel">Editar Ticket</h5>
@@ -165,7 +165,7 @@
                                 </div>
                                 <p><strong>User:</strong> {{ ticket.user }}</p>
                                 <div class="form-group"
-                                     style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                     style="display: flex; align-items: center; justify-content: start; gap: 0.5rem;">
                                     <label for="resolved" style="margin: 0;">Resolved:</label>
                                     <input type="checkbox" style="width: 20px;" class="form-control" id="resolved"
                                            name="resolved" {% if ticket.resolved %} checked {% endif %}>

@@ -49,7 +49,6 @@
                                 style="background-color: #007bff; margin: 0.25rem"
                                 data-toggle="modal"
                                 data-target="#editarModal{{ ticket.id }}"
-                                onclick="editar_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
                         >
                             Editar
                         </button>
@@ -60,12 +59,10 @@
                             style="background-color: #17a2b8; margin: 0.25rem"
                             data-toggle="modal"
                             data-target="#detalhesModal{{ ticket.id }}"
-                            onclick="detalhes_modal('{{ ticket.id }}', '{{ ticket.tipo }}')"
                     >
                         Detalhes
                     </button>
 
-                    {% if not ticket.resolved %}
                         <a
                                 class="btn"
                                 style="background-color: #17a2b8; margin: 0.25rem"
@@ -73,8 +70,6 @@
                         >
                             Chat
                         </a>
-                    {% endif %}
-                
                 </td>
             </tr>
         {% empty %}
