@@ -37,7 +37,10 @@
                 <td>{{ ticket.estado_ticket.nome }}</td>
                 <td>{{ ticket.estado_atendimento.nome }}</td>
                 <td>{{ ticket.created_at }}</td>
-                <td>{{ ticket.resolved }}</td>
+
+                <td>
+                    {% if ticket.resolved == True %} Sim {% else %} Não {% endif %}
+                </td>
                 {% if user.is_staff %}
                     <td>{{ ticket.user }}</td>
                 {% endif %}
@@ -63,13 +66,13 @@
                         Detalhes
                     </button>
 
-                        <a
-                                class="btn"
-                                style="background-color: #17a2b8; margin: 0.25rem"
-                                href="{% url 'chat_ticket' tipo=ticket.tipo ticket_id=ticket.id|default:0 %}"
-                        >
-                            Chat
-                        </a>
+                    <a
+                            class="btn"
+                            style="background-color: #17a2b8; margin: 0.25rem"
+                            href="{% url 'chat_ticket' tipo=ticket.tipo ticket_id=ticket.id|default:0 %}"
+                    >
+                        Chat
+                    </a>
                 </td>
             </tr>
         {% empty %}
