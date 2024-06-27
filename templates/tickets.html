@@ -1,0 +1,192 @@
+<!-- templates/tickets/lista_tickets.html -->
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    {% block title %}
+        <title>Tickets2Help</title>
+    {% endblock %} {% include 'base/head.html' %}
+</head>
+<body style="background: #efefef; display: flex; flex-direction: column; align-items: center;">
+{% include 'base/header.html' %}
+<div class="card m-2 p-2" style="width: 95vw;">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mr-3">Tickets</h3>
+            {% if user.is_staff %}
+                <div
+                        class="mr-2 iconSelected"
+                        style="cursor: pointer"
+                        id="tableIcon"
+                        onclick="changeToTableView()"
+                >
+                    <i class="fa-solid fa-table"></i>
+                </div>
+                <div
+                        id="chartIcon"
+                        style="cursor: pointer"
+                        onclick="changeToChartView()"
+                >
+                    <i class="fa-solid fa-chart-area"></i>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            {% if user.is_staff %}
+                <i onclick="downloadTicketCsv()" class="fa-solid fa-file-excel mr-3" style="cursor: pointer;
+          font-size: 24px;
+          color: #deeede;
+          background: #5fb35f;
+          border-top-right-radius: 50%;"></i>
+            {% endif %}
+
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#addTicketModal"
+                    style="
+            background: #50c450;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            "
+            >
+                Criar Ticket
+            </button>
+        </div>
+    </div>
+    {% include 'ticket_table.html' %}
+    {% include 'charts/index.html' %}
+</div>
+{% include 'modals/create_ticket.html' %}
+{% for ticket in tickets %}
+    {% include 'modals/view_ticket.html' %}
+{% endfor %}
+{% if user.is_staff %}
+    {% for ticket in tickets %}
+        <div
+                class="modal fade"
+                id="editarModal{{ ticket.id }}"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="editarModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarModalLabel">Editar Ticket</h5>
+                        <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post"
+                              action="{% url 'editar_ticket' tipo=ticket.tipo ticket_id=ticket.id|default:0 %}">
+                            {% csrf_token %}
+                            {% if ticket.tipo == 'Software' %}
+                                <p><strong>Título:</strong> {{ ticket.title }}</p>
+                                <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                                <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                                <div class="form-group">
+                                    <label for="estado_ticket">Estado do Ticket:</label>
+                                    <select class="form-control" id="estado_ticket" name="estado_ticket">
+                                        {% for estado in estados_ticket %}
+                                            <option value="{{ estado.id }}"
+                                                    {% if estado.id == ticket.estado_ticket.id %}
+                                                    selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="estado_atendimento">Estado do Atendimento:</label>
+                                    <select class="form-control" id="estado_atendimento" name="estado_atendimento">
+                                        {% for estado in estados_atendimento %}
+                                            <option value="{{ estado.id }}"
+                                                    {% if estado.id == ticket.estado_atendimento.id %}
+                                                    selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <p><strong>Software:</strong> {{ ticket.software }}</p>
+                                <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
+                                <div class="form-group">
+                                    <label for="intervencaoDesc">Intervenção Desc:</label>
+                                    <input type="text" class="form-control" id="intervencaoDesc" name="intervencaoDesc"
+                                           value="{{ ticket.intervencaoDesc }}">
+                                </div>
+                                <p><strong>User:</strong> {{ ticket.user }}</p>
+                                <div class="form-group"
+                                     style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                    <label for="resolved" style="margin: 0;">Resolved:</label>
+                                    <input type="checkbox" style="width: 20px;" class="form-control" id="resolved"
+                                           name="resolved" {% if ticket.resolved %} checked {% endif %}>
+                                </div>
+                                <p><strong>Resolvido a: </strong>{{ ticket.resolved_at }} </p>
+                            {% elif ticket.tipo == 'Hardware' %}
+                                <p><strong>Título:</strong> {{ ticket.title }}</p>
+                                <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                                <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                                <div class="form-group">
+                                    <label for="estado_ticket">Estado do Ticket:</label>
+                                    <select class="form-control" id="estado_ticket" name="estado_ticket">
+                                        {% for estado in estados_ticket %}
+                                            <option value="{{ estado.id }}"
+                                                    {% if estado.id == ticket.estado_ticket.id %}
+                                                    selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="estado_atendimento">Estado do Atendimento:</label>
+                                    <select class="form-control" id="estado_atendimento" name="estado_atendimento">
+                                        {% for estado in estados_atendimento %}
+                                            <option value="{{ estado.id }}"
+                                                    {% if estado.id == ticket.estado_atendimento.id %}
+                                                    selected {% endif %}>{{ estado.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <p><strong>Equipamento:</strong> {{ ticket.equipamento }}</p>
+                                <p><strong>Avaria:</strong> {{ ticket.avaria }}</p>
+                                <div class="form-group">
+                                    <label for="reparacaoDesc">Reparação Desc:</label>
+                                    <input type="text" class="form-control" id="reparacaoDesc" name="reparacaoDesc"
+                                           value="{{ ticket.reparacaoDesc }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pecas">Peças:</label>
+                                    <input type="text" class="form-control" id="pecas" name="pecas"
+                                           value="{{ ticket.pecas }}">
+                                </div>
+                                <p><strong>User:</strong> {{ ticket.user }}</p>
+                                <div class="form-group"
+                                     style="display: flex; align-items: center; justify-content: start; gap: 0.5rem;">
+                                    <label for="resolved" style="margin: 0;">Resolved:</label>
+                                    <input type="checkbox" style="width: 20px;" class="form-control" id="resolved"
+                                           name="resolved" {% if ticket.resolved %} checked {% endif %}>
+                                </div>
+                                <p><strong>Resolvido a: </strong>{{ ticket.resolved_at }} </p>
+
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="{% static 'base/js/geral.js' %}"></script>
+<script src="{% static 'base/js/hardware_chart.js' %}"></script>
+<script src="{% static 'base/js/software_chart.js' %}"></script>
+</body>
+</html>

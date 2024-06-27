@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    {% block title %}
+        <title>Tickets2Help</title>
+    {% endblock %} {% include 'base/head.html' %}
+</head>
+<body style="background: #efefef;">
+{% include 'base/header.html' %}
+{% block content %}
+    <div class="chat-container">
+        <div style="margin-bottom: 1rem; display: flex; width: 95%; align-self: center; justify-content: space-between;">
+            <div style="display: flex;">
+                <a href="/" style="align-self: center;"><i class='bx bx-chevron-left'
+                                                           style="color: black; font-size: 3rem; cursor: pointer; align-self: center;"></i></a>
+                <h1>Chat - Ticket: {{ ticket.title }}</h1>
+            </div>
+            <div style="display: flex; gap: 1rem">
+                <div style="display: flex; background: var(--color-secondary); height: 3rem; align-self: center; align-items: center; padding: 1rem; border-radius: 10px;">
+                    <p style="margin: 0; color: white;" id="estado">Estado Atendimento: {{ ticket.estado_atendimento.nome }}</p>
+                </div>
+                <div style="display: flex; background: var(--color-secondary); height: 3rem; align-self: center; align-items: center; padding: 1rem; border-radius: 10px;">
+                    <p style="margin: 0; color: white;" id="estado">Estado Ticket: {{ ticket.estado_ticket.nome }}</p>
+                </div>
+            </div>
+        </div>
+        {% if not user.is_staff %}
+            <div class="chat-messages">
+                {% for message in messages %}
+                    {% if message.sender.is_staff %}
+                        <div class="message support-message">
+                            <p class="MsgText">{{ message.text }}</p>
+                            <div style="display: flex; justify-content: space-between;">
+                                <p class="MsgText" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500;">Suporte: {{ message.sender.username }}</p>
+                                <p class="MsgText" style="margin: 0; padding: 0;">{{ message.timestamp }}</p>
+                            </div>
+
+                        </div>
+                    {% else %}
+                        <div class="message user-message">
+                            <p class="MsgText">{{ message.text }}</p>
+                            <div style="display: flex; justify-content: space-between;">
+                                <p class="MsgText" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500;">{{ message.sender.username }}</p>
+                                <p class="MsgText" style="margin: 0; padding: 0;">{{ message.timestamp }}</p>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="chat-messages">
+                {% if messages|length == 0 %}
+                    <span>Este ticket ainda não tem mensagens.</span>
+                {% else %}
+                    {% for message in messages %}
+                        {% if message.sender.is_staff %}
+                            <div class="message user-message">
+                                <p class="MsgText">{{ message.text }}</p>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <p class="MsgText" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500;">Suporte: {{ message.sender.username }}</p>
+                                    <p class="MsgText" style="margin: 0; padding: 0;">{{ message.timestamp }}</p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="message support-message">
+                                <p class="MsgText">{{ message.text }}</p>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <p class="MsgText" style="margin: 0; padding: 0; font-size: 1.2rem; font-weight: 500;">{{ message.sender.username }}</p>
+                                    <p class="MsgText" style="margin: 0; padding: 0;">{{ message.timestamp }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if not ticket.resolved %}
+            <form class="input-container" method="post">
+                {% csrf_token %}
+                <textarea name="text" class="msgInput" placeholder="Digite a sua mensagem..."></textarea>
+                <button type="submit" class="btn">Enviar</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+</body>
+</html>

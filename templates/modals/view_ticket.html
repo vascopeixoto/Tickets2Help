@@ -1,0 +1,61 @@
+<div
+        class="modal fade"
+        id="detalhesModal{{ ticket.id }}"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="detalhesModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Ticket</h5>
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if ticket.tipo == 'Software' %}
+                    <p><strong>Título:</strong> {{ ticket.title }}</p>
+                    <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                    <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                    <p>
+                        <strong>Estado do Ticket:</strong> {{ ticket.estado_ticket.nome }}
+                    </p>
+                    <p>
+                        <strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento.nome }}
+                    </p>
+                    <p><strong>Software:</strong> {{ ticket.software }}</p>
+                    <p><strong>Necessidade Desc:</strong> {{ ticket.necessidadeDesc }}</p>
+                    <p><strong>Intervenção Desc:</strong> {{ ticket.intervencaoDesc }}</p>
+                    <p><strong>User:</strong> {{ ticket.user }}</p>
+                    <p><strong>Resolvido:</strong>{% if ticket.resolved == True %} Sim {% else %} Não {% endif %}
+                        {% if ticket.resolved == True %} - {{ ticket.resolved_at }} {% endif %}</p>
+
+                {% elif ticket.tipo == 'Hardware' %}
+                    <p><strong>Título:</strong> {{ ticket.title }}</p>
+                    <p><strong>Descrição:</strong> {{ ticket.description }}</p>
+                    <p><strong>Criado:</strong> {{ ticket.created_at }}</p>
+                    <p>
+                        <strong>Estado do Ticket:</strong> {{ ticket.estado_ticket.nome }}
+                    </p>
+                    <p>
+                        <strong>Estado do Atendimento:</strong> {{ ticket.estado_atendimento.nome }}
+                    </p>
+                    <p><strong>Equipamento:</strong> {{ ticket.equipamento }}</p>
+                    <p><strong>Avaria:</strong> {{ ticket.avaria }}</p>
+                    <p><strong>Reparação Desc:</strong> {{ ticket.reparacaoDesc }}</p>
+                    <p><strong>Peças:</strong> {{ ticket.pecas }}</p>
+                    <p><strong>User:</strong> {{ ticket.user }}</p>
+                    <p><strong>Resolvido:</strong>{% if ticket.resolved == True %} Sim {% else %} Não {% endif %}
+                        {% if ticket.resolved == True %} - {{ ticket.resolved_at }} {% endif %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

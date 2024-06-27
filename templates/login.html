@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            font-family: sans-serif;
+            margin: 1rem;
+        }
+        .btn {
+            width: 10rem;
+            height: 2rem;
+            border-radius: 20px;
+            border: 0;
+            background-color: #902fcf;
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        form {
+            width: 30rem;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        form p {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; cursor: pointer;">
+                <h1 class="title">Tickets2Help</h1>
+            </div>
+        </div>
+    
+        <div class="form-container">
+            <form method="post" style="display: flex; align-items: center;">
+                <h2 class="title">Login</h2>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn" style="margin: 1rem;">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
